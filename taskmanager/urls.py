@@ -17,17 +17,40 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from core.views import ProjectViewSet, TaskViewSet, RegisterView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from core.views import (
+    ProjectViewSet,
+    TaskViewSet,
+    RegisterView,
+    LoginView,
+    ProfileView,
+    ChangePasswordView
+)
 
+# -------------------------------
+#  Router for Project & Task
+# -------------------------------
 router = routers.DefaultRouter()
 router.register(r'projects', ProjectViewSet, basename='project')
 router.register(r'tasks', TaskViewSet, basename='task')
 
+# -------------------------------
+#  URL Patterns
+# -------------------------------
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include('core.urls')),
+
+    # Projects & Tasks CRUD
     path('api/', include(router.urls)),
-    path('api/register/', RegisterView.as_view(), name='register'),
+
+    # JWT Token endpoints (from SimpleJWT)
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),   
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    # Custom Authentication Endpoints (Task 2)
+    path('api/auth/register/', RegisterView.as_view(), name='register'),
+    path('api/auth/login/', LoginView.as_view(), name='login'),
+    path('api/auth/profile/', ProfileView.as_view(), name='profile'),
+    path('api/auth/change-password/', ChangePasswordView.as_view(), name='change-password'),
 ]
