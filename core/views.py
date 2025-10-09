@@ -1,13 +1,13 @@
-from rest_framework import viewsets, permissions, generics
+from rest_framework import viewsets, permissions ,generics
 from django.contrib.auth import get_user_model
 from .models import Project, Task
-from .serializers import ProjectSerializer, TaskSerializer, RegisterSerializer
+from .serializers import ProjectSerializer, TaskSerializer
 
 User = get_user_model()
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = RegisterSerializer
+    serializer_class = ProjectSerializer
     permission_classes = [permissions.AllowAny]
 
 class ProjectViewSet(viewsets.ModelViewSet):
