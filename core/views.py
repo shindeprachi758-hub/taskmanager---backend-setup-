@@ -38,6 +38,14 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = RegisterSerializer
 
+class ProjectListView(APIView):
+    def get(self, request):
+        return Response({"message": "List of projects"})
+
+class TaskListView(APIView):
+    def get(self, request):
+        return Response({"message": "List of tasks"})
+
 
 # ---------------------------------------------------
 #   LOGIN VIEW (JWT TOKEN)
@@ -95,5 +103,4 @@ class ChangePasswordView(generics.UpdateAPIView):
             user.set_password(serializer.data.get("new_password"))
             user.save()
             return Response({"message": "Password changed successfully"}, status=status.HTTP_200_OK)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
