@@ -32,16 +32,38 @@ class ProjectDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         # only show logged-in user's projects
         return Project.objects.filter(owner=self.request.user)
+
+class TasklistCreateView(generics.ListCreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    def get_queryset(self):
+        project_id = self.request.query_params.get('project')  # Filter tasks by project
+        if project_id:
+            return Task.objects.filter(owner=self.request.user, project_id=project_id)
+        # only show logged-in user's tasks
+        return Task.objects.filter(owner=self.request.user)
     
+class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # only show logged-in user's tasks
+        return Task.objects.filter(owner=self.request.user)
+
 # ---------------------------------------------------
 #   PROJECT & TASK API VIEWSETS
 # ---------------------------------------------------
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated]  # For now allow all (no login required)
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)  # <-- set owner automatically
+    permission_classes = [permissions.AllowAny]  # For now allow all (no login required)
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -123,4 +145,5 @@ class ChangePasswordView(generics.UpdateAPIView):
             user.set_password(serializer.data.get("new_password"))
             user.save()
             return Response({"message": "Password changed successfully"}, status=status.HTTP_200_OK)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

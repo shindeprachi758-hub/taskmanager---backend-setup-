@@ -2,7 +2,8 @@
 
 from django.urls import path, include
 from rest_framework import routers
-from .views import ProjectListCreateView, ProjectDetailView
+from . import views
+from .views import ProjectListCreateView, ProjectDetailView, TasklistCreateView, TaskDetailView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from core.views import (
     ProjectViewSet,
@@ -26,16 +27,20 @@ router.register(r'tasks', TaskViewSet, basename='task')
 urlpatterns = [
     # CRUD Endpoints for Projects and Tasks
     path('', include(router.urls)),
+    path('projects/', views.ProjectListCreateView.as_view(), name='project-list-create'),
+    path('projects/<int:pk>/', views.ProjectDetailView.as_view(), name='project-detail'),
+    path('tasks/', views.TasklistCreateView.as_view(), name='task-list-create'),
+    path('tasks/<int:pk>/', views.TaskDetailView.as_view(), name='task-detail'),
 
     # JWT Token authentication endpoints
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # Custom Authentication API endpoints
-    path('auth/register/', RegisterView.as_view(), name='register'),
-    path('auth/login/', LoginView.as_view(), name='login'),
-    path('auth/profile/', ProfileView.as_view(), name='profile'),
-    path('auth/change-password/', ChangePasswordView.as_view(), name='change-password'),
-    path('projects/', ProjectListCreateView.as_view(), name='project-list-create'),
-    path('projects/<int:pk>/', ProjectDetailView.as_view(), name='project-detail'),
+    path('auth/register/', views.RegisterView.as_view(), name='register'),
+    path('auth/login/', views.LoginView.as_view(), name='login'),
+    path('auth/profile/', views.ProfileView.as_view(), name='profile'),
+    path('auth/change-password/', views.ChangePasswordView.as_view(), name='change-password'),
+    path('tasks/', views.TasklistCreateView.as_view(), name='task-list-create'),
+    path('tasks/<int:pk>/', views.TaskDetailView.as_view(), name='task-detail'),
 ]

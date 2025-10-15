@@ -18,14 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from core.views import (
-    ProjectViewSet,
-    TaskViewSet,
-    RegisterView,
-    LoginView,
-    ProfileView,
-    ChangePasswordView
-)
+from core.views import (ProjectViewSet, TaskViewSet, RegisterView, LoginView, ProfileView, ChangePasswordView)
 
 # -------------------------------
 #  Router for Project & Task
@@ -40,6 +33,7 @@ router.register(r'tasks', TaskViewSet, basename='task')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('core.urls')),
+
 
     # Projects & Tasks CRUD
     path('api/', include(router.urls)),

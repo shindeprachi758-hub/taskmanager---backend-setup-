@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password 
 from rest_framework import serializers
-from .models import Project, Task
-from django.contrib.auth.password_validation import validate_password
+from .models import Project, Task   
 
 
 # -------------------------------
@@ -18,7 +18,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = '__all__'   # ✅ Correct: double underscores, not '__all'
+        fields = '__all__'   # ✅ Correct: double underscores, not '__all__'
+        read_only_fields = ['owner']
 
 
 # -------------------------------
