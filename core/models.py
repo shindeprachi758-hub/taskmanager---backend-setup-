@@ -30,7 +30,7 @@ class Task(models.Model):
      updated_at = models.DateTimeField(auto_now=True)
      due_date = models.DateField(null=True, blank=True)
      completed = models.BooleanField(default=False)
-     assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+     assigned_to = models.ForeignKey(User, related_name='assigned_tasks', on_delete=models.CASCADE, null=True, blank=True)
 
      def str(self):
         return self.title

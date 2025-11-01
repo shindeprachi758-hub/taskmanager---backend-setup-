@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Welcome, {{ user.username }}</h3>
+<form method="POST" class="d-flex mt-3">
+    {% csrf_token %}
+    <input type="text" name="title" class="form-control me-2" placeholder="Add new task...">
+    <button class="btn btn-primary" type="submit">Add</button>
+</form>
+<ul class="list-group mt-3">
+    {% for task in tasks %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ task.title }}
+        <span>
+            {% if not task.completed %}
+            <a href="#" class="btn btn-success btn-sm">Complete</a>
+            {% endif %}
+            <a href="#" class="btn btn-danger btn-sm">Delete</a>
+        </span>
+    </li>
+    {% empty %}
+    <li class="list-group-item">No tasks found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
