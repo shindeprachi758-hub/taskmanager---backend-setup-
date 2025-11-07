@@ -25,11 +25,13 @@ router.register(r'tasks', TaskViewSet, basename='task')
 # URL Patterns
 # -------------------------------
 urlpatterns = [
-    # CRUD Endpoints for Projects and Tasks
     path('', views.home, name='home'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('register/', views.register, name='register'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    
+    # CRUD Endpoints for Projects and Tasks
     path('', include(router.urls)),
     path('projects/', views.ProjectListCreateView.as_view(), name='project-list-create'),
     path('projects/<int:pk>/', views.ProjectDetailView.as_view(), name='project-detail'),

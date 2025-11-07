@@ -6,11 +6,12 @@ from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import Task  
-from .models import Project, Task
+from .models import Task  # assuming Task model exists
 
+from .models import Project, Task
 from .serializers import (
     ProjectSerializer,
     TaskSerializer,
@@ -50,6 +51,25 @@ def register(request):
         return redirect('login')
     return render(request, 'register.html')
 
+def dashboard(request):
+    sort_by = request.GET.get("sort", "created_at")  
+    status_filter = request.GET.get("status", "all")  
+
+    tasks = Task.objects.filter(user=request.user)
+
+    if status_filter == "completed":
+        tasks = tasks.filter(is_completed=True)
+    elif status_filter == "pending":
+        tasks = tasks.filter(is_completed=False)
+
+    if sort_by == "name":
+        tasks = tasks.order_by("title")
+    elif sort_by == "recent":
+        tasks = tasks.order_by("-created_at")
+    else:
+        tasks = tasks.order_by("created_at")
+
+    return render(request, "core/dashboard.html", {"tasks": tasks})
 
 class ProjectListCreateView(generics.ListCreateAPIView):
     queryset = Project.objects.all()

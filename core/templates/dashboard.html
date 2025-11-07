@@ -1,0 +1,43 @@
+<form method="get" class="mb-3" style="display:flex; gap:10px;">
+    
+    <!-- Filter -->
+    <select name="status" class="form-control" onchange="this.form.submit()">
+        <option value="all">All Tasks</option>
+        <option value="completed">Completed</option>
+        <option value="pending">Pending</option>
+    </select>
+
+    <!-- Sorting -->
+    <select name="sort" class="form-control" onchange="this.form.submit()">
+        <option value="recent">Recently Added</option>
+        <option value="name">Alphabetical</option>
+    </select>
+
+</form>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Task Name</th>
+            <th>Status</th>
+            <th>Project</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.name }}</td>
+            <td>{{ task.get_status_display }}</td>
+            <td>{{ task.project.name }}</td>
+            <td>
+                <a href="{% url 'task-detail' task.id %}" class="btn btn-info btn-sm">View</a>
+                <a href="{% url 'task-update' task.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'task-delete' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center">No tasks found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
